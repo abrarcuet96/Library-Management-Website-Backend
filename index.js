@@ -34,8 +34,8 @@ async function run() {
             const result = await bookCollections.insertOne(book);
             res.send(result);
         });
-        app.get('/addedBook', async(req,res)=>{
-            const result= await bookCollections.find().toArray();
+        app.get('/addedBook', async (req, res) => {
+            const result = await bookCollections.find().toArray();
             res.send(result);
         });
         // Borrowed Books Users:
@@ -45,8 +45,8 @@ async function run() {
             const result = await userBorrowBookCollections.insertOne(userInformation);
             res.send(result);
         });
-        app.get('/userInfo', async(req,res)=>{
-            const result= await userBorrowBookCollections.find().toArray();
+        app.get('/userInfo', async (req, res) => {
+            const result = await userBorrowBookCollections.find().toArray();
             res.send(result);
         });
         // Borrowed Books:
@@ -55,42 +55,69 @@ async function run() {
             const result = await borrowBookCollections.insertOne(borrowBookPage);
             res.send(result);
         });
-        app.get('/borrowedPageBooks', async(req,res)=>{
-            const result= await borrowBookCollections.find().toArray();
+        app.get('/borrowedPageBooks', async (req, res) => {
+            const result = await borrowBookCollections.find().toArray();
             res.send(result);
         });
 
         // updateQuantity:
-        app.get('/addedBook/:id', async(req,res)=>{
-            const id= req.params.id;
-            const query={_id: new ObjectId(id)};
-            const result= await bookCollections.findOne(query);
+        app.get('/addedBook/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await bookCollections.findOne(query);
             res.send(result);
         })
-        app.patch('/addedBook/:id', async(req,res)=>{
-            const id= req.params.id;
-            const filter= {_id: new ObjectId(id)};
-            const options= {upsert: true};
-            const updatedQuantity= req.body;
-            const updateQuantity={
-                $set:{
-                     bookQuantity:updatedQuantity.quantity
+        app.patch('/addedBook/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedQuantity = req.body;
+            const updateQuantity = {
+                $set: {
+                    bookQuantity: updatedQuantity.quantity
                 }
             }
-            const result= await bookCollections.updateOne(filter, updateQuantity, options);
+            const result = await bookCollections.updateOne(filter, updateQuantity, options);
             res.send(result);
         })
         // Delete:
-        app.delete('/borrowedPageBooks/:id', async(req,res)=>{
-            const id=req.params.id;
-            const query={_id: new ObjectId(id)};
+        app.delete('/borrowedPageBooks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
             const result = await borrowBookCollections.deleteOne(query);
             res.send(result);
         })
-        app.get('/borrowedPageBooks/:id', async(req,res)=>{
-            const id=req.params.id;
-            const query={_id: new ObjectId(id)};
+        app.get('/borrowedPageBooks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
             const result = await borrowBookCollections.findOne(query);
+            res.send(result);
+        })
+
+        // Update:
+        app.get('/addedBook/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await bookCollections.findOne(query);
+            res.send(result);
+        });
+        app.put('/addedBook/:id', async (req, res) => {
+            const id = req.params.id;
+            const data = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedBook = {
+                $set: {
+                    imageUrl: data.imageUrl,
+                    name: data.name,
+                    bookQuantity: data.bookQuantity,
+                    authorName: data.authorName,
+                    categoryName: data.categoryName,
+                    rating: data.rating,
+                    description: data.description
+                },
+            };
+            const result = await bookCollections.updateOne(filter, updatedBook, options);
             res.send(result);
         })
         // ----------------------------------------------
