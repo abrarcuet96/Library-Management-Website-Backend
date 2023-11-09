@@ -56,7 +56,11 @@ async function run() {
             res.send(result);
         });
         app.get('/borrowedPageBooks', async (req, res) => {
-            const result = await borrowBookCollections.find().toArray();
+            let query = {};
+            if(req.query?.email){
+                query={email: req.query.email}
+            }
+            const result = await borrowBookCollections.find(query).toArray();
             res.send(result);
         });
 
@@ -119,7 +123,8 @@ async function run() {
             };
             const result = await bookCollections.updateOne(filter, updatedBook, options);
             res.send(result);
-        })
+        });
+        
         // ----------------------------------------------
         // CODE ENDS HERE
         // ----------------------------------------------
